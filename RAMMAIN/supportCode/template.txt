@@ -1,0 +1,12 @@
+# two simple blocks...
+# name 		load_addr	copy_addr	ram_bank	compressed?
+6
+sprites.bin 32768 		49152 		1 			0
+ram3.bin	32768 		49152 		3 			0
+ram4.bin	32768 		49152 		4 			0
+ram0.bin	32768 		49152 		0 			0
+#ram6.bin	32768 		49152 		6 			1
+#ram6.bin	49152 		49152 		6 			0
+test.bin 	24600 		24600 		0 			0
+engine.bin 	33025 		33025 		0 			0
+24600

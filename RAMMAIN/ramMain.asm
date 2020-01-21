@@ -18,3 +18,11 @@ INCLUDE "engine.asm"
 
 
 
+
+
+
+;;this PUBLIC needs to be ABSOLUTELY LAST as it's just a marker
+;;used to find where in memory the last byte is located
+PUBLIC _endmarkerRamMAIN
+_endmarkerRamMAIN:
+	nop

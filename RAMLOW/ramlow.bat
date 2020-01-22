@@ -11,7 +11,9 @@ cls
 
 rem zcc +zx -v -c -clib=new --fsigned-char -o objects @ram0.lst
 
+rem zcc +zx -v -m -zorg=24450 -startup=31 -clib=new objects.o  -o compiled -pragma-include:zpragma.inc
 
+rem zcc +zx -v -m -startup=31 -clib=new objects.o -o compiled -pragma-include:zpragma.inc
 
 rem move "objects.o"  "codemaps\"
 

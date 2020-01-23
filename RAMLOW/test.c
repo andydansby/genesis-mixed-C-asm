@@ -1,4 +1,9 @@
 #include "engine.h"
+//engine.h is FOUND in RAMMAIN
+
+
+
+/*
 #include "structs.h"
 #include "movement.h"
 #include "constants.h"
@@ -13,11 +18,11 @@
 #include "graphicutils.h"
 #include "collision.h"
 #include "displayloop.h"//used to display sprites and screen in game loop
+*/
 #include <stdio.h>//standard input output
 
-#include "mainmenu.h"
-
-#pragma output STACKPTR=24600
+//#include "mainmenu.h"
+//#pragma output STACKPTR=24600
 
 
 
@@ -151,7 +156,7 @@ void gameloop(void)
 }
 
 
-void main()
+void main(void)
 {
 	//mainMenu();
 	//mainMenuSelection();
@@ -173,7 +178,8 @@ void main()
 	__endasm
 
 	__asm
-		call InitSprCacheList	; initialize sprite cache list
+		call InitSprCacheList	
+		;; initialize sprite cache list
 	__endasm
 
 

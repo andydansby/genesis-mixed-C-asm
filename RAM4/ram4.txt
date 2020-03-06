@@ -1,0 +1,20 @@
+
+File objects.o at $0000: Z80RMF08
+  Name: objects
+  Names:
+    G A $0000 _ram4 (section code_compiler)
+    G A $0000 _level1 (section BANK_04)
+    G A $065E _enemies1 (section BANK_04)
+    G A $06C7 _level2 (section BANK_04)
+    G A $0B89 _enemies2 (section BANK_04)
+    G A $0BF2 _level3 (section BANK_04)
+    G A $1079 _enemies3 (section BANK_04)
+    G A $10E2 _level4 (section BANK_04)
+    G A $10E2 _enemies4 (section BANK_04)
+    G A $10E2 _level5 (section BANK_04)
+    G A $10E2 _enemies5 (section BANK_04)
+    G A $10E2 _level6 (section BANK_04)
+    G A $10E2 _enemies6 (section BANK_04)
+    G A $10E2 _level7 (section BANK_04)
+    G A $10E2 _enemies7 (section BANK_04)
+    G A $10E2 _endmarkerRam4 (section BANK_04)

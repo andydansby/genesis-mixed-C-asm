@@ -1,11 +1,10 @@
 SET PATH=c:\z88dk199b;c:\z88dk199b\bin;c:\z88dk199b\lib\;c:\z88dk199b\lib\clibs;c:\z88dk199b\lib\config;C:\Program Files\SDCC\bin 
 
+echo off
+
 cd codemaps
 	del objects.o
 cd ..
-
-cls
-echo on
 
 cd game_maps
 	copy "level1.map" "..\"
@@ -13,6 +12,7 @@ cd game_maps
 	copy "level3.map" "..\"
 cd ..
 
+echo on
 
 zcc +zx -v -c -clib=new --fsigned-char -o objects @ram4.lst
 
@@ -36,5 +36,7 @@ cd codemaps
 	echo on
 	@REM all these objects match up
 	z80nm objects.o
+	z80nm objects.o > ram4.txt
+	copy "ram4.txt" "..\"
 	echo off
 cd ..

@@ -116,3 +116,14 @@ defc MOVE_EXPLOSION	= 4	;MOVE_EXPLOSION EQU 4
 
 
 
+
+
+
+
+
+
+;;this PUBLIC needs to be ABSOLUTELY LAST as it's just a marker
+;;used to find where in memory the last byte is located
+PUBLIC _endmarkerRam4
+_endmarkerRam4:
+	nop

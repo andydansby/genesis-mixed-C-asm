@@ -3,7 +3,7 @@
 
 // Function definitions...is there a way to automate this?
 
-extern void __FASTCALL__ _get_joystick();
+//extern void __FASTCALL__ _get_joystick();
 
 __asm
 ;; THESE are hard coded addresses

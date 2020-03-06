@@ -1,0 +1,20 @@
+
+File objects.o at $0000: Z80RMF08
+  Name: objects
+  Names:
+    G A $0000 _depack0 (section CONTENDED)
+    G A $00A3 _interuptSetup (section CONTENDED)
+    G A $00B6 _SetIM2 (section CONTENDED)
+    G A $00D7 _BASICISR (section CONTENDED)
+    G A $00E2 _israddr (section CONTENDED)
+    G A $00F2 _gameISR1 (section CONTENDED)
+    G A $0101 _noscreenswitch (section CONTENDED)
+    G A $0119 _switchscreen (section CONTENDED)
+    G A $0127 _setrambank0 (section CONTENDED)
+    G A $0136 _borderTest (section CONTENDED)
+    G A $0000 _RAM_marker_LOW (section CODE_END)
+    G A $0000 _ramlow (section code_compiler)
+  External names:
+    U         _IM2table
+    U         _isrdummy
+    U         _INICIO

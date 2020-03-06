@@ -1,0 +1,192 @@
+;;contended memory from 24600-32767
+;;8167 bytes total
+SECTION CONTENDED
+org 0x6018;24600
+
+EXTERN _setrambank1
+
+
+EXTERN _INICIO
+
+;;org 0x6018;;24600-32767 program start and below uncontended
+
+;;6c6f / 27759 in original
+PUBLIC _interuptSetup
+_interuptSetup:
+	ld a, r				;6c6f
+	and $7f				;6c71
+	ld r,a				;6c73
+	; clear the highest bit of the R register. It will be used to flag for a screen switch
+	
+	ld a, 0x8a			;6c75
+	
+	ld hl, _IM2table	;6c77
+	;	ld hl, 0x8000	
+	;why loading 32768 ??
+	; 0x8000 was a 257 byte table for the interupt manager
+	
+
+	;	ld de, _gameISR	
+	;	ld de, $6088
+	;load de with actual _gameISR $6088 in orginal
+	
+	;;ATTENTION $6088 calls _read_joystick first and then calls asm routine found in utils.h
+	
+	
+
+;	   call SetIM2		
+;call actual SetIM2
+
+ret
+
+PUBLIC _gameISR1
+_gameISR1:
+	ld a,r
+	jp p, _noscreenswitch	; the highest bit of R is 0, no screen switch yet
+	call _switchscreen	; switch screen
+	ld a, r
+	and $7f
+	ld r,a	; clear the highest bit of the R register. It will be used to flag for a screen switch
+		
+		
+		
+
+
+; Set IM2 mode, prepare IM2 table (257 bytes with the same value)
+;
+; INPUT: 
+;	A: byte to set for the table -> interrupt will go to AA
+;	HL: IM2 table (257 bytes, L must be 0)
+;	DE: address with the ISR handler
+;;890b / 35083 in original
+PUBLIC _SetIM2
+_SetIM2:
+	di
+	ld (israddr + 1), de		; set address in handler
+	push af
+	ld a, h
+	ld i, a
+	pop af				; set the I register
+
+	ld (hl), a
+	ld d,h
+	ld e,l
+	inc de			
+	ld bc, 256
+	ldir				; fill the 257 byte table
+
+	ld d, a
+	ld e, a				; DE=AA		
+	ld hl, _BASICISR
+	ld bc, 27
+	ldir				; copy BASIC ISR, which will call to the cool one
+
+	im 2
+	ei
+ret 
+
+PUBLIC _BASICISR
+_BASICISR:
+	push hl
+	push af
+	push bc
+	push de
+	push ix
+	push iy
+	ex af, af'
+	push af
+	ex af, af'
+
+israddr:
+	;; ATTENTION
+	call 0 	; to be substituted with the actual ISR handler address
+
+	ex af, af'
+	pop af
+	ex af, af'
+	pop iy
+	pop ix
+	pop de
+	pop bc
+	pop af
+	pop hl
+
+	ei
+ret	; total: 27 bytes!
+
+
+;257 byte table
+PUBLIC _IM2table
+_IM2table:
+	defs	257		
+	; 257 byte table for the Interupt Manager
+
+
+PUBLIC _switchscreen
+_switchscreen:
+	; Change the visible screen, without doing anything else
+	ld	a,(23388)	;Variable del sistema con el valor previo
+	xor	8		;cambiar pantalla
+	ld	bc,32765	;Puerto en el que escribir
+	;	di			;Interrupciones no, gracias
+	ld	(23388),a	;Actualizar variable del sistema
+	out	(c),a		;Direccionar
+	;	ei			;Habilitar interrupciones
+ret			;Volver
+
+PUBLIC _noscreenswitch
+_noscreenswitch:
+	ld a, (23388)
+	and $07			; keep low bits
+	ld (_isrdummy), a	; save current state
+	ld b, 0
+	call _setrambank1		; go to ram bank 0 for the music ISR
+	
+	;;call _wyz_play;call _WYZ_PLAY
+	;;_WYZ_PLAY = _INICIO
+	call _INICIO;
+	
+	ld a, (_isrdummy)
+	ld b, a
+	call _setrambank1		; go back to normal state
+ret
+
+
+_isrdummy:
+	defb _isrdummy
+
+
+
+
+
+
+
+;;SECTION code_crt_common
+;;this SECTION is near the start of the binary
+
+
+
+;;2305 in zx assembler
+
+;;this PUBLIC needs to be absolutely last as it's just a marker
+;;used to find where in memory the last byte is located
+
+
+;;SECTION code_crt_common
+;;this SECTION is near the start of the binary
+
+
+;SECTION CODE_END
+;;this section places the code close to the end, but not the very end.
+;;47 bytes from the end in this iteration
+PUBLIC _RAM_marker_LOW
+_RAM_marker_LOW:
+	nop
+	push af
+	push hl
+	halt
+	nop
+	pop af
+	push hl
+ret
+

@@ -1,46 +1,64 @@
 SET PATH=c:\z88dk199b;c:\z88dk199b\bin;c:\z88dk199b\lib\;c:\z88dk199b\lib\clibs;c:\z88dk199b\lib\config;C:\Program Files\SDCC\bin 
 
-rem echo off
+echo off
 
 cd codemaps
-rem	del objects.o
+	del objects.o
 cd ..
 
-cls
+rem cls
 
 cd supportcode
-	copy "engine.h" "..\"
+ 	copy "engine.h" "..\"
+ 	copy "variables.h" "..\"
+ 	copy "constants.h" "..\"
+ 	copy "structs.h" "..\"
+ 	copy "externs.h" "..\"
+	copy "depack.asm" "..\"
 cd ..
+
 
 
 echo on
 
-rem zcc +zx -v -c -clib=new --fsigned-char -o objects @ram0.lst
+@rem zcc +zx -v -c -clib=new ram0.o --fsigned-char -o objects @ramlow.lst
 
-rem zcc +zx -v -m -zorg=24450 -startup=31 -clib=new objects.o  -o compiled -pragma-include:zpragma.inc
-
-zcc +zx -v -m -startup=31 -clib=new ramALL.o -o compiled -pragma-include:zpragma.inc @ramlow.lst
-
-
+REM was working with
+zcc +zx -v -c -clib=new --fsigned-char -o objects @ramlow.lst
 
 
 echo off
 
-rem move "objects.o"  "codemaps\"
+@rem zcc +zx -v -m -zorg=24450 -startup=31 -clib=new ramALL.o  -o compiled -pragma-include:zpragma.inc
+rem this line compiles all files
+@rem zcc +zx -v -m -startup=31 -clib=new ramALL.o -o compiled -pragma-include:zpragma.inc @ramlow.lst
 
-rem move "compiled_CODE.bin"  "codemaps\"
-rem move "compiled_BANK_00.bin" "codemaps\"
+@rem TROUBLESHOOTING COMPILE
+@rem zcc +zx -v -c -clib=new --fsigned-char -no-cleanup objects @ramlow.lst
 
-rem del zcc_opt.def
-rem del zcc_proj.lst
+copy "objects.o" "ramlow.o"
+move "ramlow.o" "..\"
+move "objects.o" "codemaps\"
 
-rem del engine.h
+del zcc_opt.def
+del zcc_proj.lst
+
+del "engine.h"
+del "variables.h"
+del "constants.h"
+del "structs.h"
+del "externs.h"
+del "depack.asm"
 
 
 cd codemaps
 	echo on
 	@REM all these objects match up
-	rem z80nm objects.o
+	z80nm objects.o
+	z80nm objects.o > ramlow.txt
+	copy "ramlow.txt" "..\"
 	echo off
 cd ..
+
+
 

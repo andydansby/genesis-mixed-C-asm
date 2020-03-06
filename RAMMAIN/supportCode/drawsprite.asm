@@ -1,25 +1,30 @@
-; Limited to 16x16 sprites, with mask
-; Originally taken from a tutorial by dmsmith, then modified
 
-; Input:
-;	DE: sprite number
-;	B: X position
-;	C: Y position
 
-; Required sprite alignment:
-;		mask first
-;		full X line first
-;
-; So, in SevenuP terminology, this means: X char, Mask, Char line, Y char, interleave: sprite, mask before sprite
 
-; now, the sprite drawing routine includes a sprite cache, with all required handling
+;;---------------------------------
 
+;; Limited to 16x16 sprites, with mask
+;; Originally taken from a tutorial by dmsmith, then modified
+
+;; Input:
+;;	DE: sprite number
+;;	B: X position
+;;	C: Y position
+;; Required sprite alignment:
+;;		mask first
+;;		full X line first
+;;
+;; So, in SevenuP terminology, this means: X char, Mask, Char line, Y char, interleave: sprite, mask before sprite
+;; now, the sprite drawing routine includes a sprite cache, with all required handling
 
 PUBLIC _DrawSprite
+;#BEGIN_ASM
+;;must be in UNCONTENDED
 	_DrawSprite:
 	
 	ld a, b
-	and 7					; A == rotation required
+	and 7					
+	;; A == rotation required
 	ld ixl, a
 	push de
 
@@ -28,22 +33,28 @@ PUBLIC _DrawSprite
 	rl e
 	rl d
 	rl e 
-	rl d					; sprnum << 3 (Carry was 0)
+	rl d					
+	;; sprnum << 3 (Carry was 0)
 	or e
-	ld e, a					; HL = (sprnum << 3) | rotation
+	ld e, a					
+	;; HL = (sprnum << 3) | rotation
 
 
 	ld hl, SprCacheTable
-	add hl, de				; HL = SprCacheTable[(sprnum << 3) | rotation]
+	add hl, de				
+	;; HL = SprCacheTable[(sprnum << 3) | rotation]
 	ld a, (hl)
 	cp 255
-	jr nz, SprInCache			; Sprite found in cache, since the value is not 255
+	jr nz, SprInCache			
+	;; Sprite found in cache, since the value is not 255
 
-SprNotFound:	; Sprite not found in cache, rotate and move to the top of the list
+SprNotFound:	
+;; Sprite not found in cache, rotate and move to the top of the list
 	pop de
 	push bc
 	call _InsertSpriteInCache
-	jp DrawNow                              ; we have the cache entry in
+	jp DrawNow                              
+	;; we have the cache entry in
 
 SprInCache:	; Sprite found in cache, move to the top of the list and draw
 	pop de
@@ -166,29 +177,45 @@ draw_a1:
 	jp nz, lineloop		; go to next line
 
 ret
+;#END_ASM
 
 
 
 
 
+;; Insert sprite in cache. This means
+;;  1. Allocate cache entry for the combination
+;;  2. Rotate sprite and move to the appropriate place in memory
+;;
+;;  Input: DE: sprnum 
+;;	  IXl: rotation
+;;
+;;  Output: IX: pointer to the sprite, already rotated
 
-; Insert sprite in cache. This means
-;  1. Allocate cache entry for the combination
-;  2. Rotate sprite and move to the appropriate place in memory
-;
-;  Input: DE: sprnum 
-;	  IXl: rotation
-;
-;  Output: IX: pointer to the sprite, already rotated
 PUBLIC _InsertSpriteInCache
+;#BEGIN_ASM
+;;must be in UNCONTENDED
 _InsertSpriteInCache:
-	ld h, $8A		; pointer to the LRU_prev list
+	ld h, $8A			;; pointer to the LRU_prev list
 	ld a, (LRU_last)
 	ld l, a
-	ld a, (hl)		; A == LRU_newlast,  LRU_newlast = LRU_prev[LRU_last];
-	ld (hl), LRU_LASTENTRY  ;  LRU_prev[LRU_last] = LRU_LASTENTRY;
+	ld a, (hl)				;; A == LRU_newlast,  LRU_newlast = LRU_prev[LRU_last];
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 190: integer '356482325245' out of range
+	;;	ld (hl), 42
+	ld (hl), LRU_LASTENTRY  
+	;;  LRU_prev[LRU_last] = LRU_LASTENTRY;
+
+
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 194: integer '292057815805' out of range
 	ld l, LRU_LASTENTRY
-	ld (hl), a		;  LRU_prev[LRU_LASTENTRY] = LRU_newlast;
+	
+	
+	ld (hl), a
+	;;  LRU_prev[LRU_LASTENTRY] = LRU_newlast;
 
 	ex af, af'			
 	ld a, (LRU_first)
@@ -202,11 +229,22 @@ _InsertSpriteInCache:
 	ld b, a
 	ex af, af'
 
-	ld (hl), b		; LRU_next[LRU_last] = LRU_first;
+	ld (hl), b		
+	;; LRU_next[LRU_last] = LRU_first;
 	ld l, a
-	ld (hl), LRU_LASTENTRY  ; LRU_next[LRU_newlast] = LRU_LASTENTRY;
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 214: integer '150323895037' out of range
+	ld (hl), LRU_LASTENTRY  
+	;; LRU_next[LRU_newlast] = LRU_LASTENTRY;
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 221: integer '227633306365' out of range
 	ld l, LRU_LASTENTRY
-	ld (hl), c		; LRU_next[LRU_LASTENTRY] = LRU_last;
+	
+	
+	ld (hl), c		
+	;; LRU_next[LRU_LASTENTRY] = LRU_last;
 
 	ld hl, SprCacheTable
 	ld ixh,c			; ixh == LRU_last
@@ -222,28 +260,37 @@ _InsertSpriteInCache:
 	rl c
 	rl b
 	rl c 
-	rl b					; sprnum << 3 (Carry was 0)
+	rl b					
+	;; sprnum << 3 (Carry was 0)
 	or c
-	ld c, a					; HL = (sprnum << 3) | rotation
+	ld c, a					
+	;; HL = (sprnum << 3) | rotation
 
-	add hl, bc				; hl = SprCacheTable[value]
+	add hl, bc				
+	;; hl = SprCacheTable[value]
 
-	ex af, af'				; normal A again
+	ex af, af'				
+	;; normal A again
 
 	ld c, ixh
-	ld (hl), c				; SprCacheTable[value]=LRU_last
+	ld (hl), c				
+	;; SprCacheTable[value]=LRU_last
 
-	ld b, a					; save LRU_newlast			
+	ld b, a					
+	;; save LRU_newlast			
 
 	ld a, (LRU_last)
-	ld (LRU_first), a			; LRU_first = LRU_last;
+	ld (LRU_first), a			
+	;; LRU_first = LRU_last;
+	
 	ld a,b		
-	ld (LRU_last),a				;  LRU_last = LRU_newlast, A is still LRU_newlast
+	ld (LRU_last),a				
+	;;  LRU_last = LRU_newlast, A is still LRU_newlast
 
 
-	; Now we should rotate the sprite and really write it there
-	; First, calculate the target position: 0x9000+96*SprCacheTable[value]
-	; C is LRU_last == SprCacheTable[value]
+	;; Now we should rotate the sprite and really write it there
+	;; First, calculate the target position: 0x9000+96*SprCacheTable[value]
+	;; C is LRU_last == SprCacheTable[value]
 			
 	ld hl, Multiply_by_96
 	ld b,0 
@@ -259,15 +306,22 @@ _InsertSpriteInCache:
 	ld (SCRADD),HL		; save the target address in SCRADD		
 
 
-	; aqui hay que seleccionar el banco de RAM con los sprites!!!
+	; Here you have to select the RAM bank with the sprites !!!
 	di
-	ld 	a, (23388)		; Variable del sistema con el valor previo
+	ld 	a, (23388)		; System variable with the previous value
 	ld 	(SAVE_RAMBANK), a					
-	and 	$f8			; conservar bits altos
-	or 	SPRITES_BANK			; ponemos la página 1 arriba
-	ld 	bc, $7ffd		; Puerto en el que escribir
-	ld	(23388),a	;Actualizar variable del sistema
-	out	(c),a		;Direccionar
+	and 	$f8			; keep high bits
+	
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 281: integer '154618862332' out of range
+	or 	SPRITES_BANK			;; ponemos la página 1 arriba
+	
+	
+	
+	ld 	bc, $7ffd	; Port to write to
+	ld	(23388),a	;Update system variable
+	out	(c),a		;Address
 	ei
 
 
@@ -350,30 +404,38 @@ insert_skiprotate:
 	dec (hl)
 	jp nz, insert_lineloop		; go to next line
 			
-	; aqui hay que seleccionar el banco de RAM con los sprites!!!		
+	; Here you have to select the RAM bank with the sprites !!!		
 	di
 	ld 	a,(SAVE_RAMBANK)
-	ld 	bc, $7ffd		; Puerto en el que escribir
-	ld	(23388),a	;Actualizar variable del sistema
-	out	(c),a		;Direccionar
+	ld 	bc, $7ffd		; Port to write to
+	ld	(23388),a	; Update system variable
+	out	(c),a		;Address
 	ei
 ret
+;#END_ASM
 
-; Move sprite to top of the cache. 
-;  Input: A: entry to move to the top of the cache
-;
-;	C: prev
-;	B: next
-;	E: entry
-;  Output: IX: pointer to the sprite, already rotated ???????
+
+;; Move sprite to top of the cache. 
+;;  Input: A: entry to move to the top of the cache
+;;
+;;	C: prev
+;;	B: next
+;;	E: entry
+;;  Output: IX: pointer to the sprite, already rotated ???????
 PUBLIC _MoveSpriteToTop
+;#BEGIN_ASM
 _MoveSpriteToTop:
 
 	ld e, a			; E = entry
 	ld h, $8a		; pointer to the LRU_prev list
 	ld l, a			; A ==entry
 	ld c, (hl)		; C == prev = LRU_prev[entry];
-	ld (hl), LRU_LASTENTRY  ; LRU_prev[entry] = LRU_LASTENTRY; 
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 400: integer '399431998205' out of range
+	ld (hl), LRU_LASTENTRY  ;; LRU_prev[entry] = LRU_LASTENTRY;
+
+	
 	ld a, (LRU_first)
 	ld l, a
 	ld (hl), e		;   LRU_prev[LRU_first] = entry;  50
@@ -382,8 +444,14 @@ _MoveSpriteToTop:
 	ld l, e			
 	ld b, (hl)		; B== next = LRU_next[entry];
 	ld l, e
-	ld (hl),a		; LRU_next[entry] = LRU_first;
+	ld (hl),a		;; LRU_next[entry] = LRU_first;
+	
+	;;ATTENTION
+	;;Warning at file 'drawsprite.asm' line 414: integer '347892390653' out of range
 	ld l, LRU_LASTENTRY
+	
+	
+	
 	ld (hl), e		; LRU_next[LRU_LASTENTRY] = entry;
 	ld l, c
 	ld (hl), b		; LRU_next[prev] = next; 54
@@ -396,22 +464,30 @@ _MoveSpriteToTop:
 	ld (LRU_first),a	;    LRU_first = entry;
    
 ret			; Total: 143 T-states for a cache hit	 
+;#END_ASM
 
 
-; Initialize sprite cache list
-; No entry, no output
-; Modifies: BC, DE, HL, A
+;;#8594
+;; Initialize sprite cache list
+;; No entry, no output
+;; Modifies: BC, DE, HL, A
+
 PUBLIC _InitSprCacheList
+;#BEGIN_ASM
 _InitSprCacheList:
-	; First, initialize the Sprite Cache Table with 255
+	;; First, initialize the Sprite Cache Table with 255
+
+
 	ld hl, SprCacheTable
 	ld de, SprCacheTable+1
 	ld (hl),255
 	ld bc, 1023
 	ldir
-	; Second, pre-populate the LRU_next and LRU_prev arrays
-	;unsigned char LRU_next[43]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,0};
-	;unsigned char LRU_prev[43]={42,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
+	
+	;; Second, pre-populate the LRU_next and LRU_prev arrays
+	;;unsigned char LRU_next[43]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,0};
+	;;unsigned char LRU_prev[43]={42,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41};
+	
 	ld hl, LRU_prev+1
 	ld de, LRU_next
 	ld b, 42
@@ -432,48 +508,7 @@ loop_InitSprCache:
 	xor a
 	ld (de), a
 ret
+;#END_ASM
 
 
-;;ATTENTION
-; Definitions for sprite cache addresses
-			;SprCacheTable 	EQU $8C00
-defc	SprCacheTable 	= $8C00; sprite cache table, 1K
 
-			;LRU_next	EQU $8B00
-defc	LRU_next      	= $8B00
-; cache list next pointers, 43 bytes used (some bytes wasted!)
-
-			;LRU_prev	EQU $8A00
-defc	LRU_prev      	= $8A00
-; cache list prev pointers, 43 bytes used (some bytes wasted!)
-
-LRU_first:
-	defb 0
-	
-LRU_last:
-	defb 41	; pointers to the first and last entry in the cache
-	
-movetop_prev:
-	defb 0
-	
-movetop_next:
-	defb 0
-	
-SCRADD:
-	defw 0
-	
-LINECOUNT:
-	defb 0
-	
-SAVE_RAMBANK:
-	defb 0
-
-			;SPRITES_BANK	EQU 1
-defc	SPRITES_BANK	= 1
-
-			;LRU_LASTENTRY   EQU 42
-defc 	LRU_LASTENTRY   = 42
-
-
-Multiply_by_96:
-  defw 0,96,192,288,384,480,576,672,768,864,960,1056,1152,1248,1344,1440,1536,1632,1728,1824,1920,2016,2112,2208,2304,2400,2496,2592,2688,2784,2880,2976,3072,3168,3264,3360,3456,3552,3648,3744,3840,3936

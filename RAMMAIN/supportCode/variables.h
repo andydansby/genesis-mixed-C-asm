@@ -1,3 +1,7 @@
+#ifndef VARIABLES_H
+#define VARIABLES_H
+
+//#define MAX_ENEMIES 8
 
 
 // Game variables
@@ -6,7 +10,7 @@ unsigned char ship_y;
 char speed_x;
 char speed_y;
 unsigned char frames_to_shoot;		// Can we shoot now?
-unsigned char current_screen;
+//unsigned char current_screen;		//used in asm so moved it to ramMain.asm
 unsigned char map_xpos;
 unsigned char map_displacement;  // Displacement in tile: 0000YYXX, where XX is the displacement in pixels (0, 1==2, 2==4, 3==6), and YY is the displacement in chars (0-2).
 
@@ -38,7 +42,7 @@ unsigned char dummy_b;
 unsigned int dummy_i;
 unsigned int dummy_i2;
 
-unsigned char isrdummy;
+
 
 // Levels have compressed data, let's see how it goes when loading them
 
@@ -53,4 +57,4 @@ char enemy_xchar, enemy_ychar;
 int diff_x, diff_y;
 
 
-
+#endif

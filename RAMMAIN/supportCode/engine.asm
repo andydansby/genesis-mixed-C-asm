@@ -3,21 +3,22 @@
 
 
 ;org 33025
-include "drawmap.asm"
-include "rambanks.asm"
-include "drawsprite.asm"
-include "input.asm"
-include "create_shifted_tables.asm"
-include "im2.asm"
+
+
+;;include "im2.asm"//moved to ramlow
 
 
 
-
+;;ATTENTION - ALL HARD CODED ADDRESSES
 defc		SPRITE_START = $9000	;36864
 ; we have 4k for sprites, $9000 - $9FFF
 
-defc 		MAP_START	= $A000		;40960
+;defc 		MAP_START	= $A000		;40960
 ; 4k for the game map, $a000 - $afff
+;;4095
+;PUBLIC _MAP_START
+;_MAP_START:
+;defs 4096
 
 defc		TablaTiles	= $B000		;45056
 

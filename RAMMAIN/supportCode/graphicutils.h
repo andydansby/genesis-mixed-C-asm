@@ -1,6 +1,10 @@
 #ifndef GRAPHICUTILS_H
 #define GRAPHICUTILS_H
 
+
+extern unsigned char background[];
+
+
 void clean_screen(void)
 {
 __asm
@@ -43,36 +47,46 @@ __endasm
 
 void load_background(void)
 {
-__asm
-	di
+	__asm
+		di
+	__endasm
+	bank(3);// Static images in RAM3	
 
-	ld b, 3			; Static images in RAM3
-	call setrambank		; we put it in $c000 - $ffff	
-	ld hl, $c000
-	ld de, 16384
-	call depack
+	aplib_depack(16384, background);
+	//aplib_depack(16384, 49152);
+	//aplib_depack(16384,(unsigned char)screen1);
 
-	ld b, 7
-	call setrambank		; we put it in $c000 - $ffff	
-	ld hl, 16384
-	ld de, $c000
-	ld bc, 6912
-	ldir			; copy the background to the alternate screen
+	__asm
+		di
+	__endasm
+	bank (7);
 	
-	ld b, 0
-	call setrambank		; back to reality
+	copytoAltScreen();
+
+	bank (0);
+
+__asm
 	ei
 __endasm
 }
 
 
 
-void DrawGameMap(void)
+/*void DrawGameMap(void)
 {
+	
+//ATTENTION this routine hangs up somewhere
 __asm
+
+
+call _borderTest
+
 	ld a, (_current_screen)	; we load the screen
 	ld b, a
-	call setrambank		; we put it on $c000 - $ffff
+	call _setrambank0		; we put it on $c000 - $ffff
+	
+
+	
 	ld a, (_current_screen)
 	xor 2			; 5 xor 2 = 7; 7 xor 2 = 5
 	ld (_current_screen), a	; we exchange the screen on which we are going to write
@@ -95,7 +109,9 @@ __asm
 	ld b, a				; displacement in chars within tile
 	call DrawMap
 __endasm
-}
+
+
+}*/
 
 
 void DrawSpriteList(void)

@@ -1,37 +1,26 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+
+
+
+
 //ISR interrupt service routine
 void gameISR(void)
 {
-	//joy=read_joystick(JOY_KEYS);
 	
-	joy=read_joystick(JOY_KEMPSTON);
+	
+/*	
+//marker
+*/	
+	
+	joy=read_joystick(JOY_KEYS);	
+	//joy=read_joystick(JOY_KEMPSTON);
 	//JOY_KEMPSTON
 	//#define JOY_KEMPSTON	0
 	//#define JOY_SINCLAIR1	1
 	//#define JOY_SINCLAIR2	2
 	//#define JOY_KEYS	3
-	
-	
-	__asm
-		ld a,r
-		jp p, noscreenswitch	; the highest bit of R is 0, no screen switch yet
-		call switchscreen	; switch screen
-		ld a, r
-		and $7f
-		ld r,a	; clear the highest bit of the R register. It will be used to flag for a screen switch
-	noscreenswitch:
-		ld a, (23388)
-		and $07			; keep low bits
-		ld (_isrdummy), a	; save current state
-		ld b, 0
-		call setrambank		; go to ram bank 0 for the music ISR
-		call WYZ_PLAY
-		ld a, (_isrdummy)
-		ld b, a
-		call setrambank		; go back to normal state
-	__endasm
 }
 
 

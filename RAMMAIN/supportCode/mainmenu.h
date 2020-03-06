@@ -25,7 +25,7 @@ __asm
 		BINARY "title_hiscores.bin"
 __endasm*/
 
-
+unsigned char getk;
 
 #define KEY_1 '1'
 #define KEY_2 '2'
@@ -153,7 +153,7 @@ void mainMenu(void)
 	
 		ld a, L
 
-		switchscreen:
+		;switchscreen:
 			ld	a,(23388)
 				;System variable with the previous value
      		xor	8
@@ -186,11 +186,11 @@ void mainMenu(void)
 //sccz80:"mainmenu.h" L:180 Warning:#5:Prototype is signed int fn
 //sccz80:"mainmenu.h" L:180 Warning:#6:Function is void fn
 
-	extern void __FASTCALL__ borderColor(unsigned char color)
+//extern void __FASTCALL__ borderColor(unsigned char color)
+	extern __FASTCALL__ borderColor(unsigned char color)
 	{
 		//data is pushed using the L register, but is pushed using HL pair
 		__asm
-		
 			ld a,L	;L
 			out ($fe), a
 		__endasm	

@@ -1,3 +1,5 @@
+SECTION code_user
+
 ; Scan the keyboard to find a single keypress
 ; Input: n/a
 ; Output: key scan code, in A
@@ -15,7 +17,7 @@ KeyCodes:
 PUBLIC _SCAN_KEYBOARD
 _SCAN_KEYBOARD:
 	ld bc, $FEFE	; This is the first row, we will later scan all of them
-	ld hl,KeyCodes  ; Let's go to the KeyCode table
+	ld hl,KeyCodes  ; go to the KeyCode table
 	ld a,8		; loop counter
 	
 scan_loop:
@@ -125,7 +127,8 @@ defc	KEY_B 		= $7f05
 ;		A: joystick state
 ; Bit #:  765    4   3210
 ;         |||    |   ||||
-;         XXX   BUT1 RLDU;
+;         XXX   BUT1 RLDU
+;
 ; 1 means pressed, 0 means not pressed
 PUBLIC _get_joystick
 _get_joystick:
@@ -163,7 +166,7 @@ read_kempston_joystick:
 kempston_right:
 	rr c
 	jr nc, kempston_left
-	or $08		; right is pressed
+	or 0x8		;TEST right is pressed
 kempston_left:
 	rr c
 	jr nc, kempston_down
@@ -205,7 +208,7 @@ sinclair1_down:
 sinclair1_right:
 	rr c
 	jr c, sinclair1_left
-	or $08		; right is pressed
+	or 0x8		; TEST right is pressed
 sinclair1_left:
 	rr c
 	ret c		; no carry, just return
@@ -227,7 +230,7 @@ sinclair2_left:
 sinclair2_right:
 	rr c
 	jr c, sinclair2_down
-	or $08		; right is pressed
+	or 0x8		;TEST right is pressed
 sinclair2_down:
 	rr c
 	jr c, sinclair2_up
@@ -280,7 +283,7 @@ redefined_right:
 	and a
 	jr z, redefined_fire
 	ld a,d
-	or $08
+	or 0x8	;TEST
 	ld d,a
 redefined_fire:
 	ld c,(ix+8)
@@ -294,4 +297,3 @@ ret			;fire is pressed, return
 redefined_end:
 	ld a,d
 ret
-		

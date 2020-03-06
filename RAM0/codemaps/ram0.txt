@@ -1,0 +1,10 @@
+
+File objects.o at $0000: Z80RMF08
+  Name: objects
+  Names:
+    G A $0000 _ram0 (section code_compiler)
+    G A $003F _WYZ_PLAY (section BANK_00)
+    G A $0042 _INICIO (section BANK_00)
+    G A $0066 _CARGA_CANCION (section BANK_00)
+    G A $0368 _STOP_PLAYER (section BANK_00)
+    G A $0DA1 _endmarkerRam0 (section BANK_00)

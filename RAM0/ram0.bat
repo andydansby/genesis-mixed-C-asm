@@ -1,11 +1,11 @@
+echo off
+
 SET PATH=c:\z88dk199b;c:\z88dk199b\bin;c:\z88dk199b\lib\;c:\z88dk199b\lib\clibs;c:\z88dk199b\lib\config;C:\Program Files\SDCC\bin 
 
 cd codemaps
 	del objects.o
 cd ..
 
-cls
-echo off
 
 cd songs
 	copy "parasol.mus.bin" "..\"
@@ -48,6 +48,9 @@ zcc +zx -v -c -clib=new --fsigned-char -o objects @ram0.lst
 
 rem zcc +zx -v -m -clib=new objects.o -o compiled.tmp -pragma-include:zpragma.inc
 
+rem troubleshooting compile
+REM zcc +zx -v -c -clib=new -no-cleanup --fsigned-char -o objects @ram0.lst
+
 echo off
 
 copy "objects.o" "ram0.o"
@@ -88,6 +91,8 @@ cd codemaps
 	echo on
 	@REM all these objects match up
 	z80nm objects.o
+	z80nm objects.o > ram0.txt
+	copy "ram0.txt" "..\"
 	echo off
 cd ..
 
@@ -105,5 +110,5 @@ rem	apack background.scr background.bin
 rem apack c background.scr background.bin
 rem pasmo ram3.asm ram3.bin ram3.sym
 
-	
+
 	

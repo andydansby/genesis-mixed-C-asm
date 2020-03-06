@@ -28,7 +28,9 @@ INCLUDE "variables.asm"
 
 
 
-
+PUBLIC _WYZ_PLAY
+_WYZ_PLAY:
+	CALL _INICIO
 
                
 

@@ -1,0 +1,7 @@
+
+File objects.o at $0000: Z80RMF08
+  Name: objects
+  Names:
+    G A $0000 _ram3 (section code_compiler)
+    G A $0000 _background (section BANK_03)
+    G A $023F _endmarkerRam3 (section BANK_03)

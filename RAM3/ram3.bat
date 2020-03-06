@@ -34,6 +34,8 @@ cd codemaps
 	echo on
 	@REM all these objects match up
 	z80nm objects.o
+	z80nm objects.o > ram3.txt
+	copy "ram3.txt" "..\"
 	echo off
 cd ..
 

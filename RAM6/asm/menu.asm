@@ -1474,7 +1474,9 @@ KeyCodes:
    defb 13,'l','k','j','h'       ; ENTER, L, K, J, H
    defb ' ',254,'m','n','b'      ; SPACE, SYM SHIFT, M, N, B
 
-PUBLIC _SCAN_KEYBOARD
+;ATTENTION - this _SCAN_KEYBOARD routine is localized to RAM 6 now
+
+;;PUBLIC _SCAN_KEYBOARD
 _SCAN_KEYBOARD:
 	LD BC, $FEFE	; This is the first row, we will later scan all of them
 	LD HL,KeyCodes  ; Let's go to the KeyCode table

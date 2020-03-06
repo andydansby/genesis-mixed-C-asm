@@ -4,7 +4,9 @@
 
 ;include	"maindefs.asm"
 
-PUBLIC _move_left
+
+;;ATTENTION disable public temporialy in _move_left
+;PUBLIC _move_left
 ; Simple go left movement
 ; param1: speed
 _move_left:
@@ -54,7 +56,8 @@ goneleft4:
 	ld (hl), a		; e->sprnum = 0
 	ret
 
-PUBLIC _move_right
+;;ATTENTION - temporialy disabled
+;PUBLIC _move_right
 ; Simple go right movement
 ; param1: speed
 _move_right:
@@ -78,7 +81,8 @@ goneright:
 	ld (hl), a		; e->sprnum = 0
 	ret
 
-PUBLIC _move_pingpong
+;;ATTENTION - temporialy disabled
+;;PUBLIC _move_pingpong
 ; ping-pong movement
 ; param1: 0 (move left), 1 (move right)
 ; param2: speed
@@ -176,7 +180,8 @@ pingpong4_goneright:
 	ld (hl), a		; e->param1 = 0
 	ret
 
-PUBLIC _move_explosion
+;;ATTENTION - temporialy disabled
+;;PUBLIC _move_explosion
 ; Movement type for explosions
 ; e->param1 is the counter for the explosion, goes from 4 down to 0
 

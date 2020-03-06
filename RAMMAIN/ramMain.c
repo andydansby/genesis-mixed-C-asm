@@ -6,13 +6,14 @@
 #include <compress/zx7.h>
 
 
+#include "constants.h"
 
 #include "ramMain.h"
 
 #include "engine.h"
 #include "structs.h"
 #include "movement.h"
-#include "constants.h"
+
 
 //-----------
 #include "variables.h"
@@ -27,9 +28,5 @@
 
 #include "mainmenu.h"
 
-//there is 16k of uncontended RAM 32768 to 49151
-void uncontended(void)
-{
-}
 
 

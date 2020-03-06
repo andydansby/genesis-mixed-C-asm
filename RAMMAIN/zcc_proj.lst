@@ -1,2 +1,3 @@
-ramMain.c
+ramALL.o
 ramMain.asm
+test.c

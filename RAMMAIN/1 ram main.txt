@@ -24,7 +24,7 @@ include "rambanks.asm"
 include "drawsprite.asm"
 include "input.asm"
 include "create_shifted_tables.asm"
-include "im2.asm"
+
 
 
 

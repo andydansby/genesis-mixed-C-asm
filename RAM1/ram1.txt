@@ -1,0 +1,14 @@
+
+File objects.o at $0000: Z80RMF08
+  Name: objects
+  Names:
+    G A $0000 _ram1 (section code_compiler)
+    G A $0000 _ship01 (section BANK_01)
+    G A $0040 _ship02 (section BANK_01)
+    G A $0080 _enemy01 (section BANK_01)
+    G A $00C0 _shoot01 (section BANK_01)
+    G A $0100 _expl01 (section BANK_01)
+    G A $0140 _expl02 (section BANK_01)
+    G A $0180 _expl03 (section BANK_01)
+    G A $01C0 _expl04 (section BANK_01)
+    G A $0200 _endmarkerRam1 (section BANK_01)

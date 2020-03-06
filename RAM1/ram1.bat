@@ -6,9 +6,6 @@ cd ..
 
 cls
 
-
-
-
 zcc +zx -v -c -clib=new --fsigned-char -o objects @ram1.lst
 
 
@@ -29,6 +26,8 @@ cd codemaps
 	echo on
 	@REM all these objects match up
 	z80nm objects.o
+	z80nm objects.o > ram1.txt
+	copy "ram1.txt" "..\"
 	echo off
 cd ..
 
